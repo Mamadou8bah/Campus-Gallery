@@ -3,13 +3,12 @@ package com.mamadou.campusgallery.controller;
 import com.mamadou.campusgallery.dto.LoginRequest;
 import com.mamadou.campusgallery.dto.RegisterRequest;
 import com.mamadou.campusgallery.service.AuthService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -31,12 +30,32 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?>login(LoginRequest loginRequest) {
+    public ResponseEntity<?>login(@RequestBody LoginRequest loginRequest) {
         try {
             return authService.login(loginRequest);
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Login failed: " + e.getMessage());
+        }
+    }
+
+    @GetMapping
+    public ResponseEntity<?>getLoggedInUser() {
+        try{
+            return authService.getLoggedUser();
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Could not load User: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/logout")
+    public ResponseEntity<?>logout(HttpServletRequest request, HttpServletResponse response) {
+        try{
+            return authService.logout(request,response);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Logout failed: " + e.getMessage());
         }
     }
 

@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,10 +20,12 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
-    @PostMapping("/register")
-    public ResponseEntity<?>registerUser(@RequestPart("user") RegisterRequest registerRequest,  @RequestPart(value = "profileImage", required = false) MultipartFile profileImage) {
+    @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> registerUser(
+            @RequestPart("user") RegisterRequest registerRequest,
+            @RequestPart(value = "profileImage", required = false) MultipartFile profileImage) {
         try {
-            return authService.register(registerRequest,profileImage);
+            return authService.register(registerRequest, profileImage);
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Registration failed: " + e.getMessage());

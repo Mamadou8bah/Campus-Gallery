@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 
 
 @Service
@@ -52,6 +53,24 @@ public class PhotoService {
                             .body("Photo not found"));
         } catch (Exception ex) {
             return ResponseEntity.badRequest().body("Delete failed: " + ex.getMessage());
+        }
+    }
+
+    public ResponseEntity<?>getPhotoById(long id) {
+       try{
+           Photo photo=photoRepository.findById(id).orElseThrow(()->new RuntimeException("Photo not found"));
+           return ResponseEntity.ok(photo);
+       }catch (Exception ex){
+           return ResponseEntity.badRequest().body("Could not fetch Photo with Specified Id:  " + ex.getMessage());
+       }
+    }
+
+    public ResponseEntity<?>getAllPhotos() {
+        try {
+            List<Photo>photos=photoRepository.findAll();
+            return ResponseEntity.ok(photos);
+        }catch (Exception ex) {
+            return ResponseEntity.badRequest().body("Fetch failed: " + ex.getMessage());
         }
     }
 }

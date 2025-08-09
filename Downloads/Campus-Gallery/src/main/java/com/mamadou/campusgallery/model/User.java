@@ -35,6 +35,8 @@ public class User implements UserDetails {
     @Size(min = 6)
     private String password;
 
+    private String profileUrl;
+
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "user")
     private List<Photo> photos;
 

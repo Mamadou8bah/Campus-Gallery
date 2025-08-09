@@ -8,6 +8,7 @@ import com.mamadou.campusgallery.repository.UserRepository;
 import com.mamadou.campusgallery.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +36,7 @@ public class AuthService {
     @Autowired
     private UserRepository userRepository;
 
+    @Transactional
     public ResponseEntity<?>register(RegisterRequest registerRequest, MultipartFile file)throws IOException {
         User user = userRepository.findByEmail(registerRequest.getEmail());
         if (user != null) {
@@ -50,6 +52,7 @@ public class AuthService {
         return new ResponseEntity<>(UserMapper.userToRegisterResponse(newUser), HttpStatus.OK);
     }
 
+    @Transactional
     public ResponseEntity<?> login(LoginRequest loginRequest) {
         User user = userRepository.findByEmail(loginRequest.getEmail());
         if (user == null) {
@@ -74,6 +77,7 @@ public class AuthService {
         return ResponseEntity.ok().body(UserMapper.userToRegisterResponse(user));
     }
 
+    @Transactional
     public ResponseEntity<?>logout(HttpServletRequest request, HttpServletResponse response) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication!=null){

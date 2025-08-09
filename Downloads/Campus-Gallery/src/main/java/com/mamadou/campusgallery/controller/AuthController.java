@@ -1,5 +1,6 @@
 package com.mamadou.campusgallery.controller;
 
+import com.mamadou.campusgallery.dto.LoginRequest;
 import com.mamadou.campusgallery.dto.RegisterRequest;
 import com.mamadou.campusgallery.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,4 +29,15 @@ public class AuthController {
                     .body("Registration failed: " + e.getMessage());
         }
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<?>login(LoginRequest loginRequest) {
+        try {
+            return authService.login(loginRequest);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Login failed: " + e.getMessage());
+        }
+    }
+
 }

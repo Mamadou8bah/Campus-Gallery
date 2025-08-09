@@ -47,6 +47,7 @@ public class PhotoService {
             return photoRepository.findById(id)
                     .map(photo -> {
                         photoRepository.delete(photo);
+                        String url=photo.getImageUrl();
                         return ResponseEntity.ok("Photo deleted successfully");
                     })
                     .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)

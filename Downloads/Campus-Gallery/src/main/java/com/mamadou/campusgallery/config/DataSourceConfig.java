@@ -37,6 +37,11 @@ public class DataSourceConfig {
             String path = dbUri.getPath();
             String userInfo = dbUri.getUserInfo();
             
+            // Default to PostgreSQL standard port if not specified
+            if (port == -1) {
+                port = 5432;
+            }
+            
             // Parse username and password more safely
             String username = "";
             String password = "";

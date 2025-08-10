@@ -31,10 +31,24 @@ public class DataSourceConfig {
         try {
             URI dbUri = new URI(databaseUrl);
             
-            // Convert postgresql:// to jdbc:postgresql://
-            String jdbcUrl = "jdbc:postgresql://" + dbUri.getHost() + ":" + dbUri.getPort() + dbUri.getPath();
-            String username = dbUri.getUserInfo().split(":")[0];
-            String password = dbUri.getUserInfo().split(":")[1];
+            // Extract components safely
+            String host = dbUri.getHost();
+            int port = dbUri.getPort();
+            String path = dbUri.getPath();
+            String userInfo = dbUri.getUserInfo();
+            
+            // Parse username and password more safely
+            String username = "";
+            String password = "";
+            
+            if (userInfo != null && userInfo.contains(":")) {
+                int colonIndex = userInfo.indexOf(":");
+                username = userInfo.substring(0, colonIndex);
+                password = userInfo.substring(colonIndex + 1);
+            }
+            
+            // Build JDBC URL
+            String jdbcUrl = "jdbc:postgresql://" + host + ":" + port + path;
 
             HikariConfig config = new HikariConfig();
             config.setJdbcUrl(jdbcUrl);
